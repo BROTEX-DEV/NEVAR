@@ -1,40 +1,16 @@
 (() => {
-  const $ = (id) => document.getElementById(id);
-  const supabaseReady = !!(window.supabase && window.NEVAR_SUPABASE_URL && window.NEVAR_SUPABASE_KEY);
-  const db = supabaseReady ? window.supabase.createClient(window.NEVAR_SUPABASE_URL, window.NEVAR_SUPABASE_KEY) : null;
-  let articles = [];
-  const escapeHTML = (s = "") => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-  const safeURL = (value) => { try { const u = new URL(value); return ["http:","https:"].includes(u.protocol) ? u.href : ""; } catch { return ""; } };
-  const setError = (target, message) => { if ($(target)) $(target).innerHTML = '<div class="empty">' + escapeHTML(message) + '</div>'; };
-  async function init() {
-    const themeButton = $("theme-toggle");
-    const applyTheme = theme => {
-      document.documentElement.dataset.theme = theme;
-      if (themeButton) themeButton.textContent = theme === "dark" ? "☀️ حالت روشن" : "🌙 دارک مود";
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.content = theme === "dark" ? "#101713" : "#155b3b";
-    };
-    let savedTheme = "light";
-    try { savedTheme = localStorage.getItem("nevar-theme") || "light"; } catch {}
-    applyTheme(savedTheme === "dark" ? "dark" : "light");
-    themeButton?.addEventListener("click", () => {
-      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-      applyTheme(next);
-      try { localStorage.setItem("nevar-theme", next); } catch {}
-    });
-    const toggle = $("menu-toggle"), nav = $("navlinks");
-    toggle?.addEventListener("click", () => { const open = nav.classList.toggle("open"); toggle.setAttribute("aria-expanded", String(open)); });
-    nav?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
-    if (!db) { setError("category-list","اتصال به پایگاه داده آماده نیست."); setError("business-list","تنظیمات اتصال Supabase بررسی شود."); setError("article-list","اتصال به پایگاه داده آماده نیست."); return; }
-    const [articleRes, seoRes] = await Promise.all([
-      db.from("articles").select("id,title,slug,excerpt,content,cover_url,category,created_at").eq("is_published",true).order("created_at",{ascending:false}).limit(6),
-      db.from("site_settings").select("value").eq("key","public.seo").maybeSingle()
-    ]);
-    if (articleRes.error) console.error("NEVAR articles:",articleRes.error);
-    if (seoRes.data?.value) { const seo=seoRes.data.value; if(seo.title) document.title=seo.title; if(seo.description) { let m=document.querySelector('meta[name="description"]'); if(!m){m=document.createElement("meta");m.name="description";document.head.appendChild(m);} m.content=seo.description; } }
-    articles = articleRes.data || [];
-    const articleList = $("article-list");
-    if (articleList) articleList.innerHTML = articles.length ? articles.map(a => '<article class="card">' + (safeURL(a.cover_url) ? '<img src="' + escapeHTML(safeURL(a.cover_url)) + '" alt="" loading="lazy" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px">': '<div class="symbol">✎</div>') + '<small style="color:var(--g)">' + escapeHTML(a.category || "عمومی") + '</small><h3>' + escapeHTML(a.title) + '</h3><p>' + escapeHTML(a.excerpt || "") + '</p><div class="actions"><a class="btn green" href="article.html?slug=' + encodeURIComponent(a.slug) + '">مطالعه مقاله ↗</a></div></article>').join("") : '<div class="empty">هنوز مقاله ای منتشر نشده است.</div>';
-  }
-  document.addEventListener("DOMContentLoaded", init);
+const $=id=>document.getElementById(id),ready=!!(window.supabase&&window.NEVAR_SUPABASE_URL&&window.NEVAR_SUPABASE_KEY),db=ready?window.supabase.createClient(window.NEVAR_SUPABASE_URL,window.NEVAR_SUPABASE_KEY):null;
+let articles=[],activeCategory="",searchTerm="",page=1;const pageSize=6;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeURL=v=>{try{const u=new URL(v);return ["http:","https:"].includes(u.protocol)?u.href:""}catch{return ""}};
+function theme(t){document.documentElement.dataset.theme=t;const b=$("theme-toggle");if(b)b.textContent=t==="light"?"☾ / ☼":"☼ / ☾";const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#edf5ff":"#050d20"}
+function setup(){let t="dark";try{t=localStorage.getItem("nevar-theme")||"dark"}catch{}theme(t==="light"?"light":"dark");$("theme-toggle")?.addEventListener("click",()=>{const n=document.documentElement.dataset.theme==="dark"?"light":"dark";theme(n);try{localStorage.setItem("nevar-theme",n)}catch{}});const b=$("menu-toggle"),nav=$("navlinks");b?.addEventListener("click",()=>{const o=nav.classList.toggle("open");b.setAttribute("aria-expanded",String(o))});nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));["hero-search","header-search"].forEach(id=>$(id)?.addEventListener("input",e=>{searchTerm=e.target.value.trim().toLocaleLowerCase("fa");["hero-search","header-search"].forEach(other=>{if($(other)&&$(other)!==e.target)$(other).value=e.target.value});page=1;render()}))}
+function filtered(){return articles.filter(a=>(!activeCategory||(a.category||"عمومی")===activeCategory)&&(!searchTerm||[a.title,a.excerpt,a.category].some(v=>String(v||"").toLocaleLowerCase("fa").includes(searchTerm))))}
+function renderCategories(){const el=$("category-list"),counts=new Map();articles.forEach(a=>{const c=a.category||"عمومی";counts.set(c,(counts.get(c)||0)+1)});const items=[["همه مقاله ها",articles.length,"all"],...Array.from(counts.entries()).sort((a,b)=>b[1]-a[1]).map(([c,n])=>[c,n,c])];el.innerHTML=items.map(([name,n,key],i)=>'<div class="category-row"><button type="button" data-category="'+esc(key)+'"><span class="cat-icon">'+(i===0?"▤":i%3===1?"⌘":i%3===2?"✧":"▣")+'</span><span>'+esc(name)+'</span></button><span class="count">'+n.toLocaleString("fa-IR")+'</span></div>').join("");el.querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{activeCategory=b.dataset.category==="all"?"":b.dataset.category;page=1;render();$("articles").scrollIntoView({behavior:"smooth",block:"start"})}))}
+function card(a){const url=safeURL(a.cover_url),date=a.created_at?new Date(a.created_at).toLocaleDateString("fa-IR"):"",mins=Math.max(1,Math.ceil(String(a.content||a.excerpt||"").trim().split(/\s+/).length/180));return '<article class="card"><div><span class="category-tag">'+esc(a.category||"عمومی")+'</span><h3>'+esc(a.title)+'</h3><p>'+esc(a.excerpt||"برای خواندن این مقاله و آشنایی بیشتر با موضوع، وارد صفحه مقاله شو.")+'</p><a class="read-link" href="article.html?slug='+encodeURIComponent(a.slug)+'">ادامه مطلب ←</a><div class="card-meta"><span>◷ '+mins.toLocaleString("fa-IR")+' دقیقه مطالعه</span>'+(date?'<span>▦ '+esc(date)+'</span>':"")+'</div></div>'+(url?'<img class="card-cover" src="'+esc(url)+'" alt="" loading="lazy">':'<div class="cover-placeholder" aria-hidden="true">✧</div>')+'</article>'}
+function renderPopular(){const el=$("popular-list"),items=articles.slice(0,3);el.innerHTML=items.length?items.map((a,i)=>'<div class="popular-row"><span class="popular-num">'+(i+1).toLocaleString("fa-IR")+'</span><a href="article.html?slug='+encodeURIComponent(a.slug)+'">'+esc(a.title)+'</a><span class="popular-views">↗</span></div>').join(""):'<div class="empty">هنوز مقاله ای منتشر نشده است.</div>'}
+function render(){const list=$("article-list"),pag=$("pagination"),items=filtered(),pages=Math.max(1,Math.ceil(items.length/pageSize));page=Math.min(page,pages);const slice=items.slice((page-1)*pageSize,page*pageSize);$("article-total").textContent=items.length.toLocaleString("fa-IR")+" مقاله";list.innerHTML=slice.length?slice.map(card).join(""):'<div class="empty">مقاله ای با این عبارت پیدا نشد.</div>';pag.innerHTML=pages>1?Array.from({length:pages},(_,i)=>'<button class="page-btn '+(page===i+1?'active':'')+'" type="button" data-page="'+(i+1)+'">'+(i+1).toLocaleString("fa-IR")+'</button>').join(""):"";pag.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>{page=Number(b.dataset.page);render();$("articles").scrollIntoView({behavior:"smooth",block:"start")}))}
+}
+async function init(){setup();if(!db){$("article-list").innerHTML='<div class="empty">اتصال به پایگاه داده آماده نیست. تنظیمات Supabase را بررسی کن.</div>';return}const [r,s]=await Promise.all([db.from("articles").select("id,title,slug,excerpt,content,cover_url,category,created_at").eq("is_published",true).order("created_at",{ascending:false}).limit(60),db.from("site_settings").select("value").eq("key","public.seo").maybeSingle()]);if(r.error)console.error("NEVAR articles:",r.error);if(s.data?.value){if(s.data.value.title)document.title=s.data.value.title;const m=document.querySelector('meta[name="description"]');if(m&&s.data.value.description)m.content=s.data.value.description}articles=r.data||[];renderCategories();renderPopular();render()}
+document.addEventListener("DOMContentLoaded",init);
 })();
