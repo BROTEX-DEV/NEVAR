@@ -32,15 +32,15 @@
   async function loadCategories() {
     const {data,error}=await db.from("categories").select("id,name").eq("is_active",true).order("sort_order");
     if(error) throw error; categories=data||[];
-    $("category-id").innerHTML='<option value="">بدون دسته‌بندی</option>'+categories.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
+    $("category-id").innerHTML='<option value="">بدون دسته بندی</option>'+categories.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
   }
   async function loadBusinesses() {
     const {data,error}=await db.from("businesses").select("*").order("created_at",{ascending:false});
     if(error) throw error; businesses=data||[];
-    $("business-rows").innerHTML=businesses.length?businesses.map(b=>'<div class="business-row"><div><strong>'+esc(b.name)+'</strong><p>'+esc(b.slug)+' · '+esc(categories.find(c=>c.id===b.category_id)?.name||"بدون دسته")+'</p></div><div class="row"><span class="status '+(b.is_published?"":"draft")+'">'+(b.is_published?"منتشرشده":"پیش‌نویس")+'</span><button class="btn secondary" data-edit="'+esc(b.id)+'">ویرایش</button><button class="btn secondary" data-delete="'+esc(b.id)+'">حذف</button></div></div>').join(""):'<p class="hint">هنوز کسب‌وکاری ثبت نشده است.</p>';
+    $("business-rows").innerHTML=businesses.length?businesses.map(b=>'<div class="business-row"><div><strong>'+esc(b.name)+'</strong><p>'+esc(b.slug)+' · '+esc(categories.find(c=>c.id===b.category_id)?.name||"بدون دسته")+'</p></div><div class="row"><span class="status '+(b.is_published?"":"draft")+'">'+(b.is_published?"منتشرشده":"پیش نویس")+'</span><button class="btn secondary" data-edit="'+esc(b.id)+'">ویرایش</button><button class="btn secondary" data-delete="'+esc(b.id)+'">حذف</button></div></div>').join(""):'<p class="hint">هنوز کسب وکاری ثبت نشده است.</p>';
   }
   function resetForm() {
-    $("business-form").reset(); $("business-id").value=""; $("logo-file").value=""; $("cover-file").value=""; $("save-business").textContent="ذخیره کسب‌وکار";
+    $("business-form").reset(); $("business-id").value=""; $("logo-file").value=""; $("cover-file").value=""; $("save-business").textContent="ذخیره کسب وکار";
   }
   function editBusiness(id) {
     const b=businesses.find(x=>x.id===id); if(!b)return;
@@ -60,7 +60,7 @@
   async function loadSeo() {
     const {data,error}=await db.from("site_settings").select("value").eq("key","public.seo").maybeSingle();
     if(error)throw error; const v=data?.value||{};
-    $("home-seo-title").value=v.title||"NEVAR | معرفی کسب‌وکارها و خدمات";$("home-seo-description").value=v.description||"معرفی کسب‌وکارها، خدمات و راه‌های ارتباطی در NEVAR.";
+    $("home-seo-title").value=v.title||"NEVAR | معرفی کسب وکارها و خدمات";$("home-seo-description").value=v.description||"معرفی کسب وکارها، خدمات و راه های ارتباطی در NEVAR.";
   }
   async function boot(user) {
     currentUser=user; await verifyAdmin(user); showAdmin(); await loadCategories(); await loadBusinesses(); await loadArticles(); await loadSeo();
@@ -70,7 +70,7 @@
   async function loadArticles() {
     const {data,error}=await db.from("articles").select("*").order("created_at",{ascending:false});
     if(error) throw error; articles=data||[];
-    $("article-rows").innerHTML=articles.length?articles.map(a=>'<div class="business-row"><div><strong>'+esc(a.title)+'</strong><p>'+esc(a.slug)+' · '+esc(a.category||"عمومی")+'</p></div><div class="row"><span class="status '+(a.is_published?"":"draft")+'">'+(a.is_published?"منتشرشده":"پیش‌نویس")+'</span><button class="btn secondary" data-article-edit="'+esc(a.id)+'">ویرایش</button><button class="btn secondary" data-article-delete="'+esc(a.id)+'">حذف</button></div></div>').join(""):'<p class="hint">هنوز مقاله‌ای ثبت نشده است.</p>';
+    $("article-rows").innerHTML=articles.length?articles.map(a=>'<div class="business-row"><div><strong>'+esc(a.title)+'</strong><p>'+esc(a.slug)+' · '+esc(a.category||"عمومی")+'</p></div><div class="row"><span class="status '+(a.is_published?"":"draft")+'">'+(a.is_published?"منتشرشده":"پیش نویس")+'</span><button class="btn secondary" data-article-edit="'+esc(a.id)+'">ویرایش</button><button class="btn secondary" data-article-delete="'+esc(a.id)+'">حذف</button></div></div>').join(""):'<p class="hint">هنوز مقاله ای ثبت نشده است.</p>';
   }
   function resetArticle() { $("article-form").reset(); $("article-id").value=""; $("article-category").value="عمومی"; $("article-published").checked=false; $("save-article").textContent="ذخیره مقاله"; }
   $("article-title").addEventListener("input",()=>{if(!$("article-id").value && !$("article-slug").dataset.touched)$("article-slug").value=articleSlug($("article-title").value);});
@@ -109,14 +109,14 @@
       const cover=await upload($("cover-file").files[0],"covers")||old.cover_url||"";
       const row={name:$("name").value.trim(),slug:slugify($("slug").value),category_id:$("category-id").value||null,city:$("city").value.trim(),summary:$("summary").value.trim(),description:$("description").value.trim(),phone:$("phone").value.trim(),email:$("email-contact").value.trim(),website_url:safeUrl($("website-url").value),bale_url:safeUrl($("bale-url").value),address:$("address").value.trim(),tags:$("tags").value.split(",").map(t=>t.trim()).filter(Boolean),logo_url:logo,cover_url:cover,seo_title:$("seo-title").value.trim(),seo_description:$("seo-description").value.trim(),is_featured:$("featured").checked,is_published:$("published").checked,updated_at:new Date().toISOString()};
       const result=id?await db.from("businesses").update(row).eq("id",id):await db.from("businesses").insert(row);
-      if(result.error)throw result.error; msg("admin-message",id?"تغییرات ذخیره شد.":"کسب‌وکار اضافه شد.");resetForm();await loadBusinesses();
+      if(result.error)throw result.error; msg("admin-message",id?"تغییرات ذخیره شد.":"کسب وکار اضافه شد.");resetForm();await loadBusinesses();
     }catch(err){msg("admin-message",err.message||"ذخیره انجام نشد.",true);}finally{$("save-business").disabled=false;}
   });
   $("business-rows").addEventListener("click",async e=>{
     const edit=e.target.closest("[data-edit]"), del=e.target.closest("[data-delete]");
     if(edit){editBusiness(edit.dataset.edit);return;}
-    if(del){const b=businesses.find(x=>x.id===del.dataset.delete);if(!b||!confirm("کسب‌وکار «"+b.name+"» حذف شود؟"))return;
-      const {error}=await db.from("businesses").delete().eq("id",b.id);if(error)msg("admin-message",error.message,true);else{msg("admin-message","کسب‌وکار حذف شد.");await loadBusinesses();}}
+    if(del){const b=businesses.find(x=>x.id===del.dataset.delete);if(!b||!confirm("کسب وکار «"+b.name+"» حذف شود؟"))return;
+      const {error}=await db.from("businesses").delete().eq("id",b.id);if(error)msg("admin-message",error.message,true);else{msg("admin-message","کسب وکار حذف شد.");await loadBusinesses();}}
   });
   $("seo-form").addEventListener("submit",async e=>{
     e.preventDefault();try{const value={title:$("home-seo-title").value.trim(),description:$("home-seo-description").value.trim()};const {error}=await db.from("site_settings").upsert({key:"public.seo",value,updated_at:new Date().toISOString()},{onConflict:"key"});if(error)throw error;msg("admin-message","تنظیمات SEO ذخیره شد.");}catch(err){msg("admin-message",err.message,true);}
