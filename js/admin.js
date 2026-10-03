@@ -9,8 +9,8 @@
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = theme === "dark" ? "#101713" : "#155b3b";
   };
-  let savedTheme = "light";
-  try { savedTheme = localStorage.getItem("nevar-theme") || "light"; } catch {}
+  let savedTheme = "dark";
+  try { savedTheme = localStorage.getItem("nevar-theme") || "dark"; } catch {}
   applyTheme(savedTheme === "dark" ? "dark" : "light");
   themeButton?.addEventListener("click", () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
