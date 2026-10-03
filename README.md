@@ -1,4 +1,4 @@
-# NEVAR — v1.0.2
+# NEVAR — v1.1.0
 
 وب‌سایت فارسی معرفی کسب‌وکارها و خدمات؛ GitHub Pages + Supabase.
 
@@ -9,7 +9,9 @@
 
 ## Features
 - دسته‌بندی و جست‌وجوی کسب‌وکارهای منتشرشده
-- پنل مدیریت برای ورود مدیر و ایجاد، ویرایش و حذف کسب‌وکارها
+- پنل مدیریت برای ورود مدیر و مدیریت مقاله‌ها (ایجاد، ویرایش، انتشار و حذف)
+- صفحه اختصاصی هر مقاله با عنوان و توضیحات SEO
+- مدیریت فهرست کسب‌وکارهای موجود
 - آپلود لوگو و کاور در Storage
 - فیلدهای SEO برای کسب‌وکارها و تنظیمات صفحه اصلی
 - RLS و سیاست‌های مدیر در پایگاه داده
@@ -34,7 +36,7 @@ Alternatively, assign the user by email using:
 ## Security
 - js/supabase-config.js contains only the browser-safe publishable key.
 - Never put service_role or secret keys in GitHub Pages.
-- Only admins can create, update, delete, or upload content. Public visitors can read active categories and published businesses.
+- Only admins can create, update, delete, or upload content. Public visitors can read active categories, published businesses, and published articles.
 - Public image URLs are expected because logos/covers are displayed on the public site; only admins can upload/update/delete them.
 
 ## SEO note
