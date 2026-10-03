@@ -19,8 +19,8 @@
 .content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:2.15;font-size:16px}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
 .article-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.category-pill{display:inline-flex;background:var(--soft);color:var(--g);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:bold}
 footer{background:var(--surface);border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px}.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.footlinks{display:flex;gap:15px;flex-wrap:wrap}.version{text-align:center;font-size:9px;opacity:.7;margin-top:8px}
-@media(max-width:760px){.nav{padding:10px 0;flex-wrap:wrap}.menu{display:inline-flex}.links{display:none;order:4;width:100%;flex-direction:column;align-items:stretch;gap:0}.links.open{display:flex}.links a{padding:8px 0;border-top:1px solid var(--line)}.social{margin-right:auto;gap:5px}.social .btn{font-size:10px;padding:7px 9px}.brand{font-size:20px}.brand svg{width:34px}.article-shell{padding:22px 0 45px}.article-panel{border-radius:16px}.content{font-size:15px}}
-@media(max-width:400px){.brand{font-size:18px}.social .btn{padding:6px 7px}}
+@media(max-width:760px){.python-series>div{grid-template-columns:repeat(4,minmax(0,1fr))}.nav{padding:10px 0;flex-wrap:wrap}.menu{display:inline-flex}.links{display:none;order:4;width:100%;flex-direction:column;align-items:stretch;gap:0}.links.open{display:flex}.links a{padding:8px 0;border-top:1px solid var(--line)}.social{margin-right:auto;gap:5px}.social .btn{font-size:10px;padding:7px 9px}.brand{font-size:20px}.brand svg{width:34px}.article-shell{padding:22px 0 45px}.article-panel{border-radius:16px}.content{font-size:15px}}
+@media(max-width:400px){.python-series>div{grid-template-columns:repeat(3,minmax(0,1fr))}.brand{font-size:18px}.social .btn{padding:6px 7px}}
 
 /* NEVAR logo palette: deep green + vivid orange */
 :root{--g:#104b31;--g2:#24945a;--o:#ff8a24;--bg:#f7f7f0;--ink:#14251b;--muted:#637268;--line:#dce5d9;--surface:#fff;--soft:#e7f2e8}
@@ -28,7 +28,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:20px 0
 .article-panel{border-top:3px solid var(--o);box-shadow:0 14px 45px #104b3110}
 .category-pill{background:var(--soft);box-shadow:inset 0 0 0 1px #24945a20}
 :root[data-theme="dark"] .article-panel{border-top-color:var(--o)}
-/* Neon-blue NEVAR article theme v1.2.1 */
+/* Neon-blue NEVAR article theme v1.2.2 */
 :root{color-scheme:dark;--g:#087cff;--o:#00e5ff;--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--surface:#07172d;--soft:#09213c}
 :root[data-theme="dark"]{--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--g:#087cff;--surface:#07172d;--soft:#09213c}
 
@@ -41,7 +41,7 @@ body{background:radial-gradient(ellipse at 50% 0,#073264 0,transparent 40%),var(
 footer{background:transparent;border-top:1px solid #103452;color:var(--muted)}
 
 
-/* Permanent NEVAR deep-space theme v1.2.1 */
+/* Permanent NEVAR deep-space theme v1.2.2 */
 :root{color-scheme:dark!important;--g:#087cff;--o:#00e5ff;--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--surface:#07172d;--soft:#09213c}
 html,body{background:#050b19!important;color:#edf6ff!important}
 .top{background:#040d20f5!important;border-color:#0d4773!important}
@@ -53,7 +53,7 @@ html,body{background:#050b19!important;color:#edf6ff!important}
 footer{background:#07172d!important;border-color:#103452!important;color:#82a8c9!important}
 .version{color:#82a8c9!important}
 
-/* Markdown article typography and Python course navigation v1.2.1 */
+/* Markdown article typography and Python course navigation v1.2.2 */
 .content{line-height:2.15;overflow-wrap:anywhere}
 .content h2{margin:30px 0 10px;color:#00e5ff;font-size:1.35rem}
 .content h3{margin:22px 0 8px;color:#8bdcff;font-size:1.12rem}
@@ -67,11 +67,11 @@ footer{background:#07172d!important;border-color:#103452!important;color:#82a8c9
 .content hr{border:0;border-top:1px solid #10466f;margin:24px 0}
 .python-series{margin-top:30px;padding:18px;border:1px solid #10466f;border-top:2px solid #00e5ff;border-radius:14px;background:linear-gradient(145deg,#07172d,#061226)}
 .python-series strong{display:block;color:#00e5ff;margin-bottom:12px}
-.python-series>div{display:flex;flex-wrap:wrap;gap:8px}
+.python-series>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-height:280px;overflow:auto;padding:2px}
 .python-series a{display:inline-block;text-decoration:none;padding:7px 12px;border:1px solid #14547f;border-radius:9px;background:#08203b;color:#dff5ff}
 .python-series a.current,.python-series a:hover{background:linear-gradient(120deg,#087cff,#00bfe8);border-color:#00e5ff;color:#fff}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script defer src="js/article.js?v=1.2.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script defer src="js/article.js?v=1.2.2"></script>
 <script>
 document.addEventListener("DOMContentLoaded",()=>{document.documentElement.dataset.theme="dark";document.documentElement.style.colorScheme="dark";const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content="#050b19";const m=document.getElementById("menu-toggle"),n=document.getElementById("navlinks");m?.addEventListener("click",()=>{const open=n.classList.toggle("open");m.setAttribute("aria-expanded",String(open))});n?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>n.classList.remove("open")))});
 </script>
@@ -83,5 +83,5 @@ document.addEventListener("DOMContentLoaded",()=>{document.documentElement.datas
 <div class="social"><a class="btn" href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="btn green" href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">کانال بله ↗</a></div>
 </div></header>
 <main class="wrap article-shell"><article class="article-panel" id="article"><p class="empty">در حال بارگذاری مقاله…</p></article></main>
-<footer><div class="wrap foot"><span>© NEVAR</span><div class="footlinks"><a href="index.html">خانه</a><a href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">بله</a><a href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">گیت هاب</a><a href="admin.html">پنل مدیریت</a></div></div><div class="version">v1.2.1</div></footer>
+<footer><div class="wrap foot"><span>© NEVAR</span><div class="footlinks"><a href="index.html">خانه</a><a href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">بله</a><a href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">گیت هاب</a><a href="admin.html">پنل مدیریت</a></div></div><div class="version">v1.2.2</div></footer>
 </body></html>
