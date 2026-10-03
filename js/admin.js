@@ -62,8 +62,28 @@
     if(error)throw error; const v=data?.value||{};
     $("home-seo-title").value=v.title||"NEVAR | معرفی کسب وکارها و خدمات";$("home-seo-description").value=v.description||"معرفی کسب وکارها، خدمات و راه های ارتباطی در NEVAR.";
   }
+  async function loadAnalytics() {
+    const [articleRes, countRes] = await Promise.all([
+      db.from("articles").select("id,title,slug,is_published,created_at"),
+      db.from("article_view_counts").select("article_id,view_count,updated_at")
+    ]);
+    if(articleRes.error) throw articleRes.error;
+    if(countRes.error) throw countRes.error;
+    const counts = new Map((countRes.data||[]).map(x=>[x.article_id,Number(x.view_count)||0]));
+    const rows = (articleRes.data||[]).map(a=>({...a,views:counts.get(a.id)||0}));
+    const totalViews = rows.reduce((sum,a)=>sum+a.views,0);
+    const published = rows.filter(a=>a.is_published);
+    $("analytics-summary").innerHTML =
+      '<div class="business-row"><div><p>مجموع بازدیدهای ثبت شده</p><strong>'+totalViews.toLocaleString("fa-IR")+'</strong></div></div>'+
+      '<div class="business-row"><div><p>مقاله های منتشرشده</p><strong>'+published.length.toLocaleString("fa-IR")+'</strong></div></div>'+
+      '<div class="business-row"><div><p>مقاله های دارای بازدید</p><strong>'+rows.filter(a=>a.views>0).length.toLocaleString("fa-IR")+'</strong></div></div>';
+    rows.sort((a,b)=>b.views-a.views || String(a.title).localeCompare(String(b.title),"fa"));
+    $("article-stats-rows").innerHTML = rows.length ? rows.map(a=>
+      '<div class="business-row"><div><strong>'+esc(a.title)+'</strong><p>'+esc(a.slug)+' · '+(a.is_published?'منتشرشده':'پیش نویس')+'</p></div><div><strong>👁 '+a.views.toLocaleString("fa-IR")+' بازدید</strong></div></div>'
+    ).join("") : '<p class="hint">هنوز مقاله ای برای نمایش وجود ندارد.</p>';
+  }
   async function boot(user) {
-    currentUser=user; await verifyAdmin(user); showAdmin(); await loadCategories(); await loadBusinesses(); await loadArticles(); await loadSeo();
+    currentUser=user; await verifyAdmin(user); showAdmin(); await loadCategories(); await loadBusinesses(); await loadArticles(); await loadAnalytics(); await loadSeo();
   }
 
   function articleSlug(s) { return s.toLowerCase().trim().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || ("article-"+Date.now()); }
@@ -82,13 +102,13 @@
       const id=$("article-id").value;
       const row={title:$("article-title").value.trim(),slug:$("article-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-"),category:$("article-category").value.trim()||"عمومی",cover_url:safeUrl($("article-cover").value)||null,excerpt:$("article-excerpt").value.trim(),content:$("article-content").value.trim(),seo_title:$("article-seo-title").value.trim(),seo_description:$("article-seo-description").value.trim(),is_published:$("article-published").checked,updated_at:new Date().toISOString()};
       const result=id?await db.from("articles").update(row).eq("id",id):await db.from("articles").insert(row);
-      if(result.error)throw result.error; msg("article-message",id?"مقاله ویرایش شد.":"مقاله ذخیره شد."); resetArticle(); await loadArticles();
+      if(result.error)throw result.error; msg("article-message",id?"مقاله ویرایش شد.":"مقاله ذخیره شد."); resetArticle(); await loadArticles(); await loadAnalytics();
     } catch(err) { msg("article-message",err.message||"ذخیره مقاله ناموفق بود.",true); } finally {$("save-article").disabled=false;}
   });
   $("article-rows").addEventListener("click",async e=>{
     const edit=e.target.closest("[data-article-edit]"),del=e.target.closest("[data-article-delete]");
     if(edit){const a=articles.find(x=>x.id===edit.dataset.articleEdit);if(!a)return;$("article-id").value=a.id;$("article-title").value=a.title||"";$("article-slug").value=a.slug||"";$("article-slug").dataset.touched="1";$("article-category").value=a.category||"عمومی";$("article-cover").value=a.cover_url||"";$("article-excerpt").value=a.excerpt||"";$("article-content").value=a.content||"";$("article-seo-title").value=a.seo_title||"";$("article-seo-description").value=a.seo_description||"";$("article-published").checked=!!a.is_published;$("save-article").textContent="ذخیره تغییرات";$("article-form").scrollIntoView({behavior:"smooth"});return;}
-    if(del){const a=articles.find(x=>x.id===del.dataset.articleDelete);if(!a||!confirm("مقاله «"+a.title+"» حذف شود؟"))return;const {error}=await db.from("articles").delete().eq("id",a.id);if(error)msg("article-message",error.message,true);else{msg("article-message","مقاله حذف شد.");await loadArticles();}}
+    if(del){const a=articles.find(x=>x.id===del.dataset.articleDelete);if(!a||!confirm("مقاله «"+a.title+"» حذف شود؟"))return;const {error}=await db.from("articles").delete().eq("id",a.id);if(error)msg("article-message",error.message,true);else{msg("article-message","مقاله حذف شد.");await loadArticles();await loadAnalytics();}}
   });
 
   $("login-form").addEventListener("submit",async e=>{
