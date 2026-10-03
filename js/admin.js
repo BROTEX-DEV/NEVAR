@@ -2,21 +2,10 @@
   const $ = id => document.getElementById(id);
   const db = window.supabase?.createClient(window.NEVAR_SUPABASE_URL, window.NEVAR_SUPABASE_KEY);
   let categories = [], businesses = [], currentUser = null, articles = [];
-  const themeButton = $("admin-theme-toggle");
-  const applyTheme = theme => {
-    document.documentElement.dataset.theme = theme;
-    if (themeButton) themeButton.textContent = theme === "dark" ? "☀️ حالت روشن" : "🌙 دارک مود";
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = theme === "dark" ? "#101713" : "#155b3b";
-  };
-  let savedTheme = "dark";
-  try { savedTheme = localStorage.getItem("nevar-theme") || "dark"; } catch {}
-  applyTheme(savedTheme === "dark" ? "dark" : "light");
-  themeButton?.addEventListener("click", () => {
-    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try { localStorage.setItem("nevar-theme", next); } catch {}
-  });
+  document.documentElement.dataset.theme = "dark";
+  document.documentElement.style.colorScheme = "dark";
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.content = "#050b19";
   const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const msg = (id,text,error=false) => { const el=$(id); el.textContent=text; el.classList.remove("hidden"); el.classList.toggle("error",error); };
   const clearMsg = id => $(id).classList.add("hidden");
