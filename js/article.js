@@ -11,8 +11,21 @@
     const meta=document.querySelector('meta[name="description"]');
     if(meta)meta.content=data.seo_description || data.excerpt || data.title;
     const date=data.created_at?new Date(data.created_at).toLocaleDateString("fa-IR"):"";
+    let views=null;
+    const viewKey="nevar-viewed:"+slug;
+    try {
+      const saved=sessionStorage.getItem(viewKey);
+      if(saved!==null) views=Number(saved);
+      else {
+        const result=await db.rpc("record_article_view",{p_slug:slug});
+        if(!result.error && result.data!==null && Number.isFinite(Number(result.data))) {
+          views=Number(result.data);
+          sessionStorage.setItem(viewKey,String(views));
+        }
+      }
+    } catch {}
     root.innerHTML=(data.cover_url?'<img class="cover" src="'+esc(data.cover_url)+'" alt="">':"")+
-      '<p class="muted">'+esc(data.category||"عمومی")+(date?" · "+esc(date):"")+'</p>'+
+      '<p class="muted">'+esc(data.category||"عمومی")+(date?" · "+esc(date):"")+(views!==null?' · 👁 '+views.toLocaleString("fa-IR")+' بازدید':"")+'</p>'+
       '<h1>'+esc(data.title)+'</h1>'+
       (data.excerpt?'<p class="muted">'+esc(data.excerpt)+'</p>':"")+
       '<div class="content">'+esc(data.content)+'</div>';
