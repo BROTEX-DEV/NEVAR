@@ -1,43 +1,69 @@
-# NEVAR — v1.1.4
+# NEVAR — v1.1.5
 
-مجله آنلاین فارسی برای مقاله های آموزشی؛ GitHub Pages + Supabase.
+**مجله آنلاین فارسی برای یادگیری برنامه نویسی و مطالعه مقاله های آموزشی**
 
-- Repository: https://github.com/Nevar-Dev/NEVAR
-- Bale: https://ble.ir/iNfo_Nevar
-- Supabase project: https://supabase.com/dashboard/project/pwwicgyrycaexjnnhseb
-- Admin page: /admin.html
+NEVAR یک پروژه آموزشی فارسی است که مقاله ها را در قالب صفحه های اختصاصی نمایش می دهد و امکان مدیریت و انتشار محتوا را از طریق پنل مدیریت فراهم می کند. این پروژه با GitHub Pages و Supabase ساخته شده است.
 
-## Features
-- نمایش مقاله های منتشرشده
-- پنل مدیریت برای ورود مدیر و مدیریت مقاله ها (ایجاد، ویرایش، انتشار و حذف)
-- صفحه اختصاصی هر مقاله با عنوان و توضیحات SEO
-- آمار بازدید مقاله ها در پنل مدیریت؛ هر بار بارگذاری یا رفرش صفحه مقاله یک بازدید ثبت می کند
-- آپلود لوگو و کاور در Storage
-- فیلدهای SEO برای کسب وکارها و تنظیمات صفحه اصلی
-- RLS و سیاست های مدیر در پایگاه داده
+- **مشاهده مخزن:** https://github.com/Nevar-Dev/NEVAR
+- **وب سایت:** https://nevar-dev.github.io/NEVAR/
+- **کانال بله:** https://ble.ir/iNfo_Nevar
+- **پنل مدیریت:** `/admin.html`
 
-## Create the first admin
-1. In Supabase, open Authentication → Users and create a user with your email and a strong password.
-2. Copy the user's UUID.
-3. In SQL Editor, run the following query, replacing the placeholder with the real UUID:
+## قابلیت ها
 
-    insert into public.admin_users (user_id)
-    values ('UUID-OF-YOUR-USER')
-    on conflict (user_id) do nothing;
+- نمایش مقاله های آموزشی منتشرشده
+- صفحه اختصاصی برای هر مقاله
+- پنل مدیریت برای ایجاد، ویرایش، انتشار و حذف مقاله ها
+- ثبت آمار بازدید مقاله ها در پنل مدیریت؛ هر بار بارگذاری یا تازه سازی صفحه مقاله یک بازدید ثبت می کند
+- امکان بارگذاری لوگو و تصویر کاور در Supabase Storage
+- تنظیم عنوان و توضیحات SEO برای مقاله ها و صفحه اصلی
+- استفاده از Supabase برای داده ها، احراز هویت و کنترل دسترسی
+- استفاده از Row Level Security (RLS) برای محدود کردن دسترسی به داده ها
 
-4. Sign in at /admin.html using that email and password.
+## فناوری های استفاده شده
 
-Alternatively, assign the user by email using:
+- HTML, CSS و JavaScript
+- GitHub Pages برای انتشار سایت
+- Supabase برای پایگاه داده، احراز هویت و ذخیره سازی فایل ها
 
-    insert into public.admin_users (user_id)
-    select id from auth.users where email = 'admin@example.com'
-    on conflict (user_id) do nothing;
+## راه اندازی مدیر اولیه
 
-## Security
-- js/supabase-config.js contains only the browser-safe publishable key.
-- Never put service_role or secret keys in GitHub Pages.
-- Only admins can manage content and view analytics. Public visitors can read published articles and increment view counts through a restricted database function.
-- Public image URLs are expected because logos/covers are displayed on the public site; only admins can upload/update/delete them.
+1. در Supabase وارد بخش **Authentication → Users** شوید و یک کاربر با ایمیل و گذرواژه قوی بسازید.
+2. شناسه UUID کاربر را کپی کنید.
+3. در **SQL Editor** دستور زیر را اجرا کنید و مقدار نمونه را با UUID واقعی جایگزین کنید:
 
-## SEO note
-Homepage title and description are updated in the browser from public.seo settings. GitHub Pages serves static HTML, so server-rendered SEO requires a later build/deploy step if needed.
+```sql
+insert into public.admin_users (user_id)
+values ('UUID-OF-YOUR-USER')
+on conflict (user_id) do nothing;
+```
+
+4. از مسیر `/admin.html` با ایمیل و گذرواژه همان کاربر وارد پنل مدیریت شوید.
+
+روش جایگزین برای تعیین مدیر با ایمیل:
+
+```sql
+insert into public.admin_users (user_id)
+select id from auth.users where email = 'admin@example.com'
+on conflict (user_id) do nothing;
+```
+
+## امنیت
+
+- فایل `js/supabase-config.js` باید فقط کلید عمومی قابل استفاده در مرورگر را داشته باشد.
+- هرگز کلید `service_role` یا کلیدهای محرمانه را در مخزن یا GitHub Pages قرار ندهید.
+- فقط مدیران مجاز به مدیریت محتوا و مشاهده آمار هستند.
+- بازدیدکنندگان عمومی می توانند مقاله های منتشرشده را بخوانند و ثبت بازدید از طریق تابع محدودشده پایگاه داده انجام می شود.
+- آدرس تصاویر عمومی است تا لوگو و کاورها در سایت نمایش داده شوند؛ مدیریت بارگذاری، تغییر و حذف تصاویر باید محدود به مدیران باشد.
+
+## نکته SEO
+
+تنظیمات عنوان و توضیحات صفحه اصلی از `public.seo` در مرورگر خوانده می شوند. چون GitHub Pages فایل های ایستا ارائه می کند، برای SEO سمت سرور یا تولید HTML اختصاصی برای هر مقاله ممکن است در آینده به مرحله ساخت و انتشار جداگانه نیاز باشد.
+
+## مشارکت و بازخورد
+
+اگر پیشنهادی برای بهتر شدن NEVAR دارید یا با مشکلی روبه رو شدید، می توانید از طریق مخزن GitHub آن را مطرح کنید. اگر پروژه برایتان مفید بود، با دادن یک ستاره به مخزن به دیده شدن آن کمک می کنید.
+
+---
+
+**نسخه مستندات:** 1.1.5
