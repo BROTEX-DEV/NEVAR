@@ -28,7 +28,7 @@
       viewError="ارتباط با شمارنده بازدید برقرار نشد.";
     }
     root.innerHTML=(data.cover_url?'<img class="cover" src="'+esc(data.cover_url)+'" alt="">':"")+
-      '<p class="muted">'+esc(data.category||"عمومی")+(date?" · "+esc(date):"")+(views!==null?' · 👁 '+views.toLocaleString("fa-IR")+' بازدید':"")+'</p>'+
+      '<div class="article-topline"><span class="category-pill">'+esc(data.category||"عمومی")+'</span><span class="muted">'+(date?esc(date)+" · ":"")+(views!==null?'👁 '+views.toLocaleString("fa-IR")+' بازدید':"")+'</span></div>'+
       (viewError?'<p class="muted" role="status">'+esc(viewError)+'</p>':"")+
       '<h1>'+esc(data.title)+'</h1>'+
       (data.excerpt?'<p class="muted">'+esc(data.excerpt)+'</p>':"")+
