@@ -30,6 +30,21 @@
     }).join("");
   }
   async function init() {
+    const themeButton = $("theme-toggle");
+    const applyTheme = theme => {
+      document.documentElement.dataset.theme = theme;
+      if (themeButton) themeButton.textContent = theme === "dark" ? "☀️ حالت روشن" : "🌙 دارک مود";
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = theme === "dark" ? "#101713" : "#155b3b";
+    };
+    let savedTheme = "light";
+    try { savedTheme = localStorage.getItem("nevar-theme") || "light"; } catch {}
+    applyTheme(savedTheme === "dark" ? "dark" : "light");
+    themeButton?.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try { localStorage.setItem("nevar-theme", next); } catch {}
+    });
     const toggle = $("menu-toggle"), nav = $("navlinks");
     toggle?.addEventListener("click", () => { const open = nav.classList.toggle("open"); toggle.setAttribute("aria-expanded", String(open)); });
     nav?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
