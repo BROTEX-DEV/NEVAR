@@ -80,6 +80,5 @@
   $("seo-form").addEventListener("submit",async e=>{
     e.preventDefault();try{const value={title:$("home-seo-title").value.trim(),description:$("home-seo-description").value.trim()};const {error}=await db.from("site_settings").upsert({key:"public.seo",value,updated_at:new Date().toISOString()},{onConflict:"key"});if(error)throw error;msg("admin-message","تنظیمات SEO ذخیره شد.");}catch(err){msg("admin-message",err.message,true);}
   });
-  $("slug").addEventListener("input",()=>delete $("slug").dataset.touched);
   (async()=>{if(!db){showLogin();msg("login-message","اتصال Supabase برقرار نیست.",true);return;}try{const {data}=await db.auth.getSession();if(data.session?.user)await boot(data.session.user);else showLogin();}catch(e){showLogin();}})();
 })();
