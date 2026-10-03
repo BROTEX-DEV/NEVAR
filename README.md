@@ -1,6 +1,6 @@
-# NEVAR — v1.1.0
+# NEVAR — v1.1.1
 
-وب‌سایت فارسی معرفی کسب‌وکارها و خدمات؛ GitHub Pages + Supabase.
+وب سایت فارسی معرفی کسب وکارها و خدمات؛ GitHub Pages + Supabase.
 
 - Repository: https://github.com/Nevar-Dev/NEVAR
 - Bale: https://ble.ir/iNfo_Nevar
@@ -8,13 +8,13 @@
 - Admin page: /admin.html
 
 ## Features
-- دسته‌بندی و جست‌وجوی کسب‌وکارهای منتشرشده
-- پنل مدیریت برای ورود مدیر و مدیریت مقاله‌ها (ایجاد، ویرایش، انتشار و حذف)
+- دسته بندی و جست وجوی کسب وکارهای منتشرشده
+- پنل مدیریت برای ورود مدیر و مدیریت مقاله ها (ایجاد، ویرایش، انتشار و حذف)
 - صفحه اختصاصی هر مقاله با عنوان و توضیحات SEO
-- مدیریت فهرست کسب‌وکارهای موجود
+- مدیریت فهرست کسب وکارهای موجود
 - آپلود لوگو و کاور در Storage
-- فیلدهای SEO برای کسب‌وکارها و تنظیمات صفحه اصلی
-- RLS و سیاست‌های مدیر در پایگاه داده
+- فیلدهای SEO برای کسب وکارها و تنظیمات صفحه اصلی
+- RLS و سیاست های مدیر در پایگاه داده
 
 ## Create the first admin
 1. In Supabase, open Authentication → Users and create a user with your email and a strong password.
