@@ -2,7 +2,7 @@
   const $ = (id) => document.getElementById(id);
   const supabaseReady = !!(window.supabase && window.NEVAR_SUPABASE_URL && window.NEVAR_SUPABASE_KEY);
   const db = supabaseReady ? window.supabase.createClient(window.NEVAR_SUPABASE_URL, window.NEVAR_SUPABASE_KEY) : null;
-  let businesses = [], categories = [], activeCategory = "all";
+  let businesses = [], categories = [], articles = [], activeCategory = "all";
   const escapeHTML = (s = "") => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
   const safeURL = (value) => { try { const u = new URL(value); return ["http:","https:"].includes(u.protocol) ? u.href : ""; } catch { return ""; } };
   const iconFor = (icon) => ({code:"⌘",palette:"✳",briefcase:"▣","briefcase-business":"▣","graduation-cap":"▤",store:"⌂"})[icon] || "✦";
@@ -55,17 +55,21 @@
       activeCategory = target.dataset.category; renderCategories(); renderBusinesses();
       if (target.closest("#category-list")) $("businesses")?.scrollIntoView({behavior:"smooth"});
     });
-    if (!db) { setError("category-list","اتصال به پایگاه داده آماده نیست."); setError("business-list","تنظیمات اتصال Supabase بررسی شود."); return; }
-    const [catRes, bizRes, seoRes] = await Promise.all([
+    if (!db) { setError("category-list","اتصال به پایگاه داده آماده نیست."); setError("business-list","تنظیمات اتصال Supabase بررسی شود."); setError("article-list","اتصال به پایگاه داده آماده نیست."); return; }
+    const [catRes, bizRes, articleRes, seoRes] = await Promise.all([
       db.from("categories").select("id,name,slug,description,icon,sort_order").eq("is_active",true).order("sort_order"),
       db.from("businesses").select("id,category_id,name,slug,summary,description,logo_url,cover_url,phone,email,website_url,bale_url,address,city,tags,is_featured,sort_order").eq("is_published",true).order("is_featured",{ascending:false}).order("sort_order"),
+      db.from("articles").select("id,title,slug,excerpt,content,cover_url,category,created_at").eq("is_published",true).order("created_at",{ascending:false}).limit(6),
       db.from("site_settings").select("value").eq("key","public.seo").maybeSingle()
     ]);
     if (catRes.error) console.error("NEVAR categories:",catRes.error);
     if (bizRes.error) console.error("NEVAR businesses:",bizRes.error);
+    if (articleRes.error) console.error("NEVAR articles:",articleRes.error);
     if (seoRes.data?.value) { const seo=seoRes.data.value; if(seo.title) document.title=seo.title; if(seo.description) { let m=document.querySelector('meta[name="description"]'); if(!m){m=document.createElement("meta");m.name="description";document.head.appendChild(m);} m.content=seo.description; } }
-    categories = catRes.data || []; businesses = bizRes.data || [];
+    categories = catRes.data || []; businesses = bizRes.data || []; articles = articleRes.data || [];
     renderCategories(); renderBusinesses();
+    const articleList = $("article-list");
+    if (articleList) articleList.innerHTML = articles.length ? articles.map(a => '<article class="card">' + (safeURL(a.cover_url) ? '<img src="' + escapeHTML(safeURL(a.cover_url)) + '" alt="" loading="lazy" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:12px">': '<div class="symbol">✎</div>') + '<small style="color:var(--g)">' + escapeHTML(a.category || "عمومی") + '</small><h3>' + escapeHTML(a.title) + '</h3><p>' + escapeHTML(a.excerpt || "") + '</p><div class="actions"><a class="btn green" href="article.html?slug=' + encodeURIComponent(a.slug) + '">مطالعه مقاله ↗</a></div></article>').join("") : '<div class="empty">هنوز مقاله‌ای منتشر نشده است.</div>';
   }
   document.addEventListener("DOMContentLoaded", init);
 })();
