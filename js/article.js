@@ -30,8 +30,8 @@
   function renderPythonSeries(slug) {
     const match=String(slug||"").match(/^python-tutorial-part-(\d+)$/);
     if(!match)return "";
-    const current=Number(match[1]);if(current<1||current>8)return "";
-    const links=Array.from({length:8},(_,i)=>{const n=i+1;return '<a class="'+(n===current?'current':'')+'" href="article.html?slug=python-tutorial-part-'+n+'">قسمت '+n.toLocaleString("fa-IR")+'</a>';}).join("");
+    const current=Number(match[1]);if(current<1||current>50)return "";
+    const links=Array.from({length:50},(_,i)=>{const n=i+1;return '<a class="'+(n===current?'current':'')+'" href="article.html?slug=python-tutorial-part-'+n+'">قسمت '+n.toLocaleString("fa-IR")+'</a>';}).join("");
     return '<nav class="python-series" aria-label="قسمت های آموزش پایتون"><strong>مسیر آموزش پایتون</strong><div>'+links+'</div></nav>';
   }
   const db = window.supabase?.createClient(window.NEVAR_SUPABASE_URL,window.NEVAR_SUPABASE_KEY);
