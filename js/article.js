@@ -12,14 +12,24 @@
     if(meta)meta.content=data.seo_description || data.excerpt || data.title;
     const date=data.created_at?new Date(data.created_at).toLocaleDateString("fa-IR"):"";
     let views=null;
+    let viewError="";
     try {
       const result=await db.rpc("record_article_view",{p_slug:slug});
-      if(!result.error && result.data!==null && Number.isFinite(Number(result.data))) {
+      if(result.error) {
+        console.error("NEVAR view counter error:",result.error);
+        viewError="ثبت بازدید انجام نشد: "+(result.error.message||"خطای ارتباط با پایگاه داده");
+      } else if(result.data!==null && Number.isFinite(Number(result.data))) {
         views=Number(result.data);
+      } else {
+        viewError="این مقاله برای ثبت بازدید پیدا نشد.";
       }
-    } catch {}
+    } catch (error) {
+      console.error("NEVAR view counter exception:",error);
+      viewError="ارتباط با شمارنده بازدید برقرار نشد.";
+    }
     root.innerHTML=(data.cover_url?'<img class="cover" src="'+esc(data.cover_url)+'" alt="">':"")+
       '<p class="muted">'+esc(data.category||"عمومی")+(date?" · "+esc(date):"")+(views!==null?' · 👁 '+views.toLocaleString("fa-IR")+' بازدید':"")+'</p>'+
+      (viewError?'<p class="muted" role="status">'+esc(viewError)+'</p>':"")+
       '<h1>'+esc(data.title)+'</h1>'+
       (data.excerpt?'<p class="muted">'+esc(data.excerpt)+'</p>':"")+
       '<div class="content">'+esc(data.content)+'</div>';
