@@ -41,12 +41,14 @@
       if (target.closest("#category-list")) $("businesses")?.scrollIntoView({behavior:"smooth"});
     });
     if (!db) { setError("category-list","اتصال به پایگاه داده آماده نیست."); setError("business-list","تنظیمات اتصال Supabase بررسی شود."); return; }
-    const [catRes, bizRes] = await Promise.all([
+    const [catRes, bizRes, seoRes] = await Promise.all([
       db.from("categories").select("id,name,slug,description,icon,sort_order").eq("is_active",true).order("sort_order"),
-      db.from("businesses").select("id,category_id,name,slug,summary,description,logo_url,cover_url,phone,email,website_url,bale_url,address,city,tags,is_featured,sort_order").eq("is_published",true).order("is_featured",{ascending:false}).order("sort_order")
+      db.from("businesses").select("id,category_id,name,slug,summary,description,logo_url,cover_url,phone,email,website_url,bale_url,address,city,tags,is_featured,sort_order").eq("is_published",true).order("is_featured",{ascending:false}).order("sort_order"),
+      db.from("site_settings").select("value").eq("key","public.seo").maybeSingle()
     ]);
     if (catRes.error) console.error("NEVAR categories:",catRes.error);
     if (bizRes.error) console.error("NEVAR businesses:",bizRes.error);
+    if (seoRes.data?.value) { const seo=seoRes.data.value; if(seo.title) document.title=seo.title; if(seo.description) { let m=document.querySelector('meta[name="description"]'); if(!m){m=document.createElement("meta");m.name="description";document.head.appendChild(m);} m.content=seo.description; } }
     categories = catRes.data || []; businesses = bizRes.data || [];
     renderCategories(); renderBusinesses();
   }
