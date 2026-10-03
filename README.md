@@ -1,6 +1,6 @@
-# NEVAR — v1.1.1
+# NEVAR — v1.1.2
 
-وب سایت فارسی معرفی کسب وکارها و خدمات؛ GitHub Pages + Supabase.
+مجله آنلاین فارسی برای مقاله های آموزشی؛ GitHub Pages + Supabase.
 
 - Repository: https://github.com/Nevar-Dev/NEVAR
 - Bale: https://ble.ir/iNfo_Nevar
@@ -8,10 +8,10 @@
 - Admin page: /admin.html
 
 ## Features
-- دسته بندی و جست وجوی کسب وکارهای منتشرشده
+- نمایش مقاله های منتشرشده
 - پنل مدیریت برای ورود مدیر و مدیریت مقاله ها (ایجاد، ویرایش، انتشار و حذف)
 - صفحه اختصاصی هر مقاله با عنوان و توضیحات SEO
-- مدیریت فهرست کسب وکارهای موجود
+- آمار بازدید مقاله ها در پنل مدیریت
 - آپلود لوگو و کاور در Storage
 - فیلدهای SEO برای کسب وکارها و تنظیمات صفحه اصلی
 - RLS و سیاست های مدیر در پایگاه داده
@@ -36,7 +36,7 @@ Alternatively, assign the user by email using:
 ## Security
 - js/supabase-config.js contains only the browser-safe publishable key.
 - Never put service_role or secret keys in GitHub Pages.
-- Only admins can create, update, delete, or upload content. Public visitors can read active categories, published businesses, and published articles.
+- Only admins can manage content and view analytics. Public visitors can read published articles and increment view counts through a restricted database function.
 - Public image URLs are expected because logos/covers are displayed on the public site; only admins can upload/update/delete them.
 
 ## SEO note
