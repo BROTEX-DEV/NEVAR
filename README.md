@@ -1,1 +1,41 @@
-# NEVAR
+# NEVAR — v1.0.2
+
+وب‌سایت فارسی معرفی کسب‌وکارها و خدمات؛ GitHub Pages + Supabase.
+
+- Repository: https://github.com/Nevar-Dev/NEVAR
+- Bale: https://ble.ir/iNfo_Nevar
+- Supabase project: https://supabase.com/dashboard/project/pwwicgyrycaexjnnhseb
+- Admin page: /admin.html
+
+## Features
+- دسته‌بندی و جست‌وجوی کسب‌وکارهای منتشرشده
+- پنل مدیریت برای ورود مدیر و ایجاد، ویرایش و حذف کسب‌وکارها
+- آپلود لوگو و کاور در Storage
+- فیلدهای SEO برای کسب‌وکارها و تنظیمات صفحه اصلی
+- RLS و سیاست‌های مدیر در پایگاه داده
+
+## Create the first admin
+1. In Supabase, open Authentication → Users and create a user with your email and a strong password.
+2. Copy the user's UUID.
+3. In SQL Editor, run the following query, replacing the placeholder with the real UUID:
+
+    insert into public.admin_users (user_id)
+    values ('UUID-OF-YOUR-USER')
+    on conflict (user_id) do nothing;
+
+4. Sign in at /admin.html using that email and password.
+
+Alternatively, assign the user by email using:
+
+    insert into public.admin_users (user_id)
+    select id from auth.users where email = 'admin@example.com'
+    on conflict (user_id) do nothing;
+
+## Security
+- js/supabase-config.js contains only the browser-safe publishable key.
+- Never put service_role or secret keys in GitHub Pages.
+- Only admins can create, update, delete, or upload content. Public visitors can read active categories and published businesses.
+- Public image URLs are expected because logos/covers are displayed on the public site; only admins can upload/update/delete them.
+
+## SEO note
+Homepage title and description are updated in the browser from public.seo settings. GitHub Pages serves static HTML, so server-rendered SEO requires a later build/deploy step if needed.
