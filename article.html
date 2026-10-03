@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fa" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="مقاله ای از NEVAR"><meta name="theme-color" content="#155b3b">
+<meta name="description" content="مقاله ای از NEVAR"><meta name="theme-color" content="#050b19">
 <title>مقاله | NEVAR</title>
 <style>
 :root{--g:#155b3b;--g2:#238552;--o:#f28b35;--bg:#f6f8f3;--ink:#18251d;--muted:#65746a;--line:#dce6dc;--surface:#fff;--soft:#eaf3eb}
@@ -28,10 +28,10 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:20px 0
 .article-panel{border-top:3px solid var(--o);box-shadow:0 14px 45px #104b3110}
 .category-pill{background:var(--soft);box-shadow:inset 0 0 0 1px #24945a20}
 :root[data-theme="dark"] .article-panel{border-top-color:var(--o)}
-/* Neon-blue NEVAR article theme v1.1.8 */
+/* Neon-blue NEVAR article theme v1.1.9 */
 :root{color-scheme:dark;--g:#087cff;--o:#00e5ff;--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--surface:#07172d;--soft:#09213c}
 :root[data-theme="dark"]{--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--g:#087cff;--surface:#07172d;--soft:#09213c}
-:root[data-theme="light"]{color-scheme:light;--bg:#edf5ff;--ink:#10233d;--muted:#526d89;--line:#b9d7f1;--g:#1769db;--o:#007fae;--surface:#fff;--soft:#edf6ff}
+
 body{background:radial-gradient(ellipse at 50% 0,#073264 0,transparent 40%),var(--bg);color:var(--ink)}
 .top{background:#040d20ed;border-bottom:1px solid #0d4773}
 .brand{color:#f2f8ff;direction:ltr;letter-spacing:6px}.brand svg{filter:drop-shadow(0 0 10px #00bfff66)}
@@ -39,19 +39,31 @@ body{background:radial-gradient(ellipse at 50% 0,#073264 0,transparent 40%),var(
 .article-panel{background:linear-gradient(145deg,#07172df5,#061226f8);border:1px solid #10466f;border-top:2px solid var(--o);box-shadow:0 0 40px #007cff10}
 .article h1{color:var(--ink)}.category-pill{background:#06365b;color:var(--o);border:1px solid #105a85}
 footer{background:transparent;border-top:1px solid #103452;color:var(--muted)}
-:root[data-theme="light"] .top{background:#f4f9ffed}:root[data-theme="light"] .brand{color:#163554}:root[data-theme="light"] .article-panel{background:#fff}
+
+
+/* Permanent NEVAR deep-space theme v1.1.9 */
+:root{color-scheme:dark!important;--g:#087cff;--o:#00e5ff;--bg:#050b19;--ink:#edf6ff;--muted:#9bb8d3;--line:#10466f;--surface:#07172d;--soft:#09213c}
+html,body{background:#050b19!important;color:#edf6ff!important}
+.top{background:#040d20f5!important;border-color:#0d4773!important}
+.links a{color:#d9e9ff!important}.links a:hover{color:#00e5ff!important}
+.btn{background:#08203b!important;color:#edf6ff!important;border-color:#14547f!important}
+.btn.green,.btn.orange{background:linear-gradient(120deg,#087cff,#00bfe8)!important;border-color:#00cfff!important;color:#fff!important}
+.article-panel{background:linear-gradient(145deg,#07172df5,#061226f8)!important;border-color:#10466f!important;border-top:2px solid #00e5ff!important}
+.category-pill{background:#06365b!important;color:#00e5ff!important;border-color:#105a85!important}
+footer{background:#07172d!important;border-color:#103452!important;color:#82a8c9!important}
+.version{color:#82a8c9!important}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script defer src="js/article.js?v=1.1.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script defer src="js/article.js?v=1.1.9"></script>
 <script>
-document.addEventListener("DOMContentLoaded",()=>{const b=document.getElementById("theme-toggle"),m=document.getElementById("menu-toggle"),n=document.getElementById("navlinks");const apply=t=>{document.documentElement.dataset.theme=t;if(b)b.textContent=t==="dark"?"☀️ حالت روشن":"🌙 دارک مود";const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=t==="dark"?"#101713":"#155b3b"};let saved="light";try{saved=localStorage.getItem("nevar-theme")||"light"}catch{}apply(saved==="dark"?"dark":"light");b?.addEventListener("click",()=>{const t=document.documentElement.dataset.theme==="dark"?"light":"dark";apply(t);try{localStorage.setItem("nevar-theme",t)}catch{}});m?.addEventListener("click",()=>{const open=n.classList.toggle("open");m.setAttribute("aria-expanded",String(open))});n?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>n.classList.remove("open")))});
+document.addEventListener("DOMContentLoaded",()=>{document.documentElement.dataset.theme="dark";document.documentElement.style.colorScheme="dark";const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content="#050b19";const m=document.getElementById("menu-toggle"),n=document.getElementById("navlinks");m?.addEventListener("click",()=>{const open=n.classList.toggle("open");m.setAttribute("aria-expanded",String(open))});n?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>n.classList.remove("open")))});
 </script>
 </head><body>
 <header class="top"><div class="wrap nav">
 <a class="brand" href="index.html"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#08f4ff"/><stop offset=".52" stop-color="#087cff"/><stop offset="1" stop-color="#273dff"/></linearGradient></defs><path fill="url(#ng)" d="M7 14H29L70 63V14H91V86H70L29 37V86H7Z"/><path fill="#07172d" d="M29 14V37L48 59V36Z"/></svg>NEVAR</a>
-<button class="btn menu" id="menu-toggle" aria-expanded="false">☰ منو</button><button class="btn theme-toggle" id="theme-toggle" type="button">🌙 دارک مود</button>
+<button class="btn menu" id="menu-toggle" aria-expanded="false">☰ منو</button>
 <nav class="links" id="navlinks"><a href="index.html#home">خانه</a><a href="index.html#articles">مقالات</a><a href="index.html#about">درباره ما</a><a href="index.html#contact">ارتباط</a></nav>
 <div class="social"><a class="btn" href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="btn green" href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">کانال بله ↗</a></div>
 </div></header>
 <main class="wrap article-shell"><article class="article-panel" id="article"><p class="empty">در حال بارگذاری مقاله…</p></article></main>
-<footer><div class="wrap foot"><span>© NEVAR</span><div class="footlinks"><a href="index.html">خانه</a><a href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">بله</a><a href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">گیت هاب</a><a href="admin.html">پنل مدیریت</a></div></div><div class="version">v1.1.8</div></footer>
+<footer><div class="wrap foot"><span>© NEVAR</span><div class="footlinks"><a href="index.html">خانه</a><a href="https://ble.ir/iNfo_Nevar" target="_blank" rel="noopener noreferrer">بله</a><a href="https://github.com/Nevar-Dev" target="_blank" rel="noopener noreferrer">گیت هاب</a><a href="admin.html">پنل مدیریت</a></div></div><div class="version">v1.1.9</div></footer>
 </body></html>
